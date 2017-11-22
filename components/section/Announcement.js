@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
+import Board from '../Board';
 import { withAnnouncementData } from '../hoc';
-
-const textColor = '#66fcf1';
-const backgroundColor = '#202832';
+import { imgSource, backgroundColor } from '../const';
 
 const Container = styled.div`
   width: 100vw;
@@ -22,7 +21,6 @@ const MenuContainer = styled.div`
   flex-basis: 25%;
   padding: 1rem;
 `;
-
 const Logo = styled.div`
   width: 16rem;
   margin-bottom: 2.5rem;
@@ -32,14 +30,12 @@ const Logo = styled.div`
     height: auto;
   }
 `;
-
 const Input = styled.input`
   width: 15rem;
   height: 1.5rem;
   border-radius: 0.15rem;
   margin-bottom: 2rem;
 `;
-
 const Button = styled.div`
   color: black;
   background: white;
@@ -47,30 +43,25 @@ const Button = styled.div`
   border-radius: 0.2rem;
 `;  
 
-const BoardContainer = styled.div`
-  display: flex;
-  background: white;
-  margin: 2rem 2rem 0 0;
-  border-top-left-radius: 2rem;
-  border-top-right-radius: 2rem;
-  flex-basis: 75%;
-`;
-
 class Announcement extends Component {
   render() { 
-    console.log(this.props)
+    const { loading, error } = this.props;
+
+    if (loading) {
+      return 'loading...';
+    } else if (error) {
+      return 'error';
+    }
     return (
       <Container>
         <MenuContainer>
           <Logo>
-            <img src='/static/ywc_logo.png' />
+            <img src={imgSource('logo')} />
           </Logo>
           <Input />
           <Button>Search</Button>
         </MenuContainer>
-        <BoardContainer>
-
-        </BoardContainer>
+        <Board {...this.props} />
       </Container>
     );
   }
