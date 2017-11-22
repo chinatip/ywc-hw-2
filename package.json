@@ -10,9 +10,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "create-react-class": "^15.6.2",
+    "es6-promise": "^4.1.1",
+    "isomorphic-fetch": "^2.2.1",
+    "jquery": "^3.2.1",
+    "lodash": "^4.17.4",
     "next": "^4.1.4",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
+    "recompose": "^0.26.0",
     "styled-components": "^2.2.3",
     "styled-jsx": "^2.2.0"
   }

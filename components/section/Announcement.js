@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import styled from 'styled-components'
+import styled from 'styled-components';
+
+import { withAnnouncementData } from '../hoc';
 
 const textColor = '#66fcf1';
 const backgroundColor = '#202832';
@@ -56,6 +58,7 @@ const BoardContainer = styled.div`
 
 class Announcement extends Component {
   render() { 
+    console.log(this.props)
     return (
       <Container>
         <MenuContainer>
@@ -73,4 +76,4 @@ class Announcement extends Component {
   }
 } 
 
-export default Announcement;
+export default withAnnouncementData(Announcement);
