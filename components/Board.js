@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import filter from 'lodash/filter';
+import { Table, Popover } from 'antd';
 
 import { TABS, TYPES, TITLE_TYPES, COLOR_TYPES, COLOR_FADE_TYPES, imgSource } from './const';
 
@@ -48,39 +49,44 @@ const Space = styled.div`
   flex: 1;
 `;
 
-const BoardProfilesWrapper = styled.div`
+const TableSpace = styled.div`
+  background: ${props => COLOR_FADE_TYPES[props.type]};
+  height: 1rem;
+`;
+
+const TableContainer = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 1rem;
+  padding-top: 0;
   background: ${props => COLOR_FADE_TYPES[props.type]};
 `;
-const ColumnWrapper = styled.div`
-  display: flex;
-`
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`;
-const Profile = styled.div`
-  border: 1px solid transparent;
-  border-radius: 0.2rem;
-  padding: 0.2rem;
-  margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
+const TableWrapper = styled.div`
   background: white;
-  ${props => props.isMatch? `border-color: ${COLOR_TYPES[props.type]}; box-shadow: 0 0 0.5rem 0.1rem ${COLOR_TYPES[props.type]};`: ''};
 `;
+
+const PopoverContainer = styled.div`
+  display: flex;
+`;
+const Image = styled.div`
+  width: 2rem;
+  height: 2rem;
+  background: grey;
+  margin-right: 0.5rem;
+`; 
+const Title = styled.span`
+
+`; 
 
 class Board extends Component {
   constructor(props) {
     super();
 
     this.state = {
-      type: TYPES[0],
+      type: TABS[0],
     };
   }
-
+  
   handleSelectType = (type) => () => {
     this.setState({ type });
   }
@@ -90,11 +96,11 @@ class Board extends Component {
 
     return (
       <BoardTypeWrapper>
-        { TYPES.map((t) => {
+        { TABS.map((t) => {
             return (
               <TypeWrapper select={type === t} type={type} onClick={this.handleSelectType(t)}>
                 <img src={imgSource(t)} />
-                <div>{`Web ${TITLE_TYPES[t]}`}</div>
+                <div>{TITLE_TYPES[t]}</div>
               </TypeWrapper>
             );
           })
@@ -103,43 +109,57 @@ class Board extends Component {
     );
   }
 
-  renderColumnProfiles(data) {
-    const { type } = this.state;
-    const { searchData } = this.props;
+  renderProfilePopover(id, record) {
+    const { firstName, lastName, interviewRef } = record;
+    const content = (
+      <PopoverContainer>
+        <Image></Image>
+        <Title>{`${firstName} ${lastName}`}</Title>
+      </PopoverContainer>
+    );
 
     return (
-      data.map((d, index) => {
-          const { interviewRef, firstName, lastName, search } = d;
-          const isMatch = filter(searchData[type], ((s) => interviewRef === s.interviewRef)).length > 0;
-
-          return (
-            <Profile key={index + interviewRef} isMatch={search} type={type}>
-              <span>{`${interviewRef} ${firstName} ${lastName}`}</span>
-            </Profile>
-          );
-        })
-      );
+      <Popover content={content} placement="bottom" placement="topRight" trigger="hover">
+        <div style={{ cursor: 'pointer' }}>{id}</div>
+      </Popover>
+    );
   }
 
-  renderProfiles() {
+  renderProfilesTable() {
     const { type } = this.state;
     const { searchText, searchData, dataByType } = this.props;
-    const data = (searchData[type] || []).concat(dataByType[type]);
 
-    const data1 = data.filter((d, index) => (index < data.length/2) );
-    const data2 = data.filter((d, index) => (index >= data.length/2) );
-
+    const columns = [,{
+      title: 'ID',
+      dataIndex: 'interviewRef',
+      sorter: (a, b) => a.length - b.length,
+      render: (id, record) => {
+        return this.renderProfilePopover(id, record);
+      },
+    },{
+      title: 'Firstname',
+      dataIndex: 'firstName',
+      sorter: (a, b) => a.length - b.length,
+    }, {
+      title: 'Lastname',
+      dataIndex: 'lastName',
+      sorter: (a, b) => a.length - b.length,
+    },{
+      title: 'Major',
+      dataIndex: 'major',
+    }];
+    
     return (
-      <BoardProfilesWrapper type={type}>
-        <ColumnWrapper>
-          <Column>
-            {this.renderColumnProfiles(data1)}
-          </Column>
-          <Column>
-            {this.renderColumnProfiles(data2)}
-          </Column>
-        </ColumnWrapper>
-      </BoardProfilesWrapper>
+      <TableContainer type={type}>
+        <TableWrapper>
+          <Table 
+          size='middle' 
+          pagination={{ pageSize: 80 }} 
+          columns={columns} 
+          dataSource={searchData[type]} 
+          onRowMouseEnter={this.handleRowMouseEnter}/>
+        </TableWrapper>
+      </TableContainer>
     );
   }
   
@@ -150,7 +170,8 @@ class Board extends Component {
           {this.renderMenuType()}
           <Space />
         </BoardInnerContainer>
-        {this.renderProfiles()}
+        <TableSpace type={this.state.type}/>
+        {this.renderProfilesTable()}
       </BoardContainer>
     );
   }

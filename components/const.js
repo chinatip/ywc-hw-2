@@ -4,12 +4,14 @@ const marketing = 'marketing';
 const programming = 'programming';
 const all = 'all';
 
-export const TYPES = ['all','content', 'design', 'marketing', 'programming'];
+export const TYPES = ['content', 'design', 'marketing', 'programming'];
+export const TABS = ['all','content', 'design', 'marketing', 'programming'];
+
 export const TITLE_TYPES = {
-  content: 'Content',
-  design: 'Design',
-  marketing: 'Marketing',
-  programming: 'Programming',
+  content: 'Web Content',
+  design: 'Web Design',
+  marketing: 'Web Marketing',
+  programming: 'Web Programming',
   all: 'All'
 };
 

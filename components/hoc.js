@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import createReactClass from 'create-react-class';
 import { compose } from 'recompose';
 import sortBy from 'lodash/sortBy';
+import forEach from 'lodash/forEach';
 import $ from 'jquery';
 
 import { TYPES } from './const';
@@ -69,13 +70,11 @@ function WithDataByType(Component) {
       const dataByType = {};
 
       TYPES.forEach((t) => {
-        if (t === 'all') {
-          dataByType[t] = data;
-        } else {
-          const fData = sortBy(data.filter((d) => (d.major === t)), ['interviewRef']);
-          dataByType[t] = fData;
-        }
+        const fData = sortBy(data.filter((d) => (d.major === t)), ['interviewRef']);
+        dataByType[t] = fData;
       });
+
+      dataByType['all'] = data;
 
       return dataByType;
     },
@@ -88,43 +87,42 @@ function WithDataByType(Component) {
   });
 }
 
-function WithSearchProfile(Component) {
+function WithSearchData(Component) {
   return createReactClass({
     getInitialState() {
       return {
         searchText: '',
-        searchData: null
+        searchData: this.props.dataByType
       };
     },
 
     componentWillUpdate(nextProps, nextState) {
-      if (nextState.searchText !== this.state.searchText) {
-        const searchData = this.searchProfile(nextProps.dataByType, nextState.searchText);
+      if (nextState.searchText !== this.state.searchText || nextProps.dataByType !== this.props.dataByType) {
+        const searchData = this.searchData(nextProps.dataByType, nextState.searchText);
         nextState.searchData = searchData;
-      }
-
-      if(!nextProps.loading && !nextProps.error && !this.state.searchData) {
-        nextState.searchData = nextProps.data;
       }
     },
 
-    searchProfile(data, value) {
+    searchData(data, value) {
       const searchData = {}; 
-
+      searchData['all'] = [];
+      
       TYPES.forEach((type) => {
         searchData[type] = [];
-        data[type].forEach((d) => {
+        forEach(data[type], (d) => {
           const profile = Object.assign({}, d);
           const { firstName, lastName } = profile;
-          if(value.length > 0 && (firstName.search(value) >-1 || lastName.search(value) >-1)) {
+          if(firstName.search(value) >-1 || lastName.search(value) >-1) {
             profile.search = true;
             searchData[type].push(profile);
+            searchData['all'].push(profile);
           }
         });
 
+
         sortBy(searchData[type], ['interviewRef']);
       })
-      console.log(searchData['programming'])
+
       return searchData;
     },
 
@@ -145,5 +143,5 @@ function WithSearchProfile(Component) {
 export const withAnnouncementData = compose(
   WithLoadData,
   WithDataByType,
-  WithSearchProfile
+  WithSearchData
 );
