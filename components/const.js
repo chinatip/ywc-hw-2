@@ -31,6 +31,13 @@ export const COLOR_FADE_TYPES = {
   all: 'rgba(255, 152, 0, 0.3)'
 };
 
+export const dataFormat = {
+  interviewRef: 'ID', 
+  firstName: 'Firstname',
+  lastName: 'Lastname', 
+  major: 'Major'
+};
+
 export const font = `'Prompt', sans-serif`;
 export const textColor = '#66fcf1';
 export const backgroundColor = '#202832';

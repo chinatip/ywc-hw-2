@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Table, Popover, Modal } from 'antd';
+import map from 'lodash/map';
+import sortBy from 'lodash/sortBy';
+import { Table, Popover, Modal, Dropdown, Menu, Button } from 'antd';
 
-import { FBimgSource, FBProfile } from './const';
+import { TYPES, dataFormat, FBimgSource, FBProfile } from './const';
 import { FB_ID_BY_MAJOR } from './const-fb-id'
 
 const TableContainer = styled.div`
@@ -32,14 +34,31 @@ const Title = styled.span`
 
 `; 
 
+const DropdownContainer = styled.div`
+  margin-bottom: 1rem;
+`;  
+const RollbackDropdown = styled.div`
+  .ant-dropdown-menu-item {
+    padding: 0;
+  }
+`; 
+const ItemContainer = styled.div`
+  padding: 0.5rem;
+`;
+
 class ProfilesTable extends Component {
   constructor(props) {
     super();
     
     this.state = {
       visible: false,
-      profile: null
+      profile: null,
+      sortKey: Object.keys(dataFormat)[0]
     }
+  }
+
+  handleSort = (sortKey) => () => {
+    this.setState({ sortKey });
   }
 
   handleOpen = (profile) => {
@@ -58,6 +77,10 @@ class ProfilesTable extends Component {
 
   handleClick = (fbId) => () => {
     window.open(FBProfile(fbId), '_blank');
+  }
+
+  handleDropDownContainer = () => {
+    return this.dropdownContainer
   }
 
   renderModal() {
@@ -106,36 +129,51 @@ class ProfilesTable extends Component {
   }
 
   render() {
+    const { sortKey } = this.state;
     const { data, color } = this.props;
 
     const columns = [,{
       title: 'ID',
       dataIndex: 'interviewRef',
-      sorter: (a, b) => a.length - b.length,
       render: (id, profile) => {
         return this.renderProfilePopover(id, profile);
       },
     },{
       title: 'Firstname',
       dataIndex: 'firstName',
-      sorter: (a, b) => a.length - b.length,
     }, {
       title: 'Lastname',
       dataIndex: 'lastName',
-      sorter: (a, b) => a.length - b.length,
     },{
       title: 'Major',
       dataIndex: 'major',
     }];
 
+
+    const menu = (
+      <Menu>
+        { map(dataFormat, (format, key) => {
+            return (<Menu.Item><ItemContainer onClick={this.handleSort(key)}>{format}</ItemContainer></Menu.Item>);
+          })
+        }
+      </Menu>
+    );
+
     return (
       <TableContainer color={color}>
+        <RollbackDropdown innerRef={(r) => { this.dropdownContainer = r }} />
+        <DropdownContainer>
+          <Dropdown overlay={menu} placement="bottomCenter" getPopupContainer={this.handleDropDownContainer} >
+            <Button>Sort By</Button>
+          </Dropdown>
+        </DropdownContainer>
         <TableWrapper>
           <Table 
             size='middle' 
             pagination={{ pageSize: 80 }} 
+            scroll={{ y: 640 }}
             columns={columns} 
-            dataSource={data} 
+            dataSource={sortBy(data, [sortKey])} 
             onRowClick={this.handleOpen}/>
         </TableWrapper>
         { this.renderModal() }
