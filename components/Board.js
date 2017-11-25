@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import filter from 'lodash/filter';
 
 import { TYPES, TITLE_TYPES, imgSource } from './const';
 
@@ -67,6 +68,7 @@ const Profile = styled.div`
   padding: 0.2rem;
   margin-right: 0.5rem;
   margin-bottom: 0.5rem;
+  ${props => props.isMatch? 'background: red': ''};
 `;
 
 class Board extends Component {
@@ -74,7 +76,7 @@ class Board extends Component {
     super();
 
     this.state = {
-      type: TYPES[0]
+      type: TYPES[0],
     };
   }
 
@@ -101,24 +103,28 @@ class Board extends Component {
   }
 
   renderColumnProfiles(data) {
-    return (
-     data.map((d) => {
-        const { interviewRef, firstName, lastName } = d;
+    const { type } = this.state;
+    const { searchData } = this.props;
 
-        return (
-          <Profile>
-            <span>{`${interviewRef} ${firstName} ${lastName}`}</span>
-          </Profile>
-        );
-      })
-    
-    );
+    return (
+      data.map((d, index) => {
+          const { interviewRef, firstName, lastName, search } = d;
+          const isMatch = filter(searchData[type], ((s) => interviewRef === s.interviewRef)).length > 0;
+
+          return (
+            <Profile key={index + interviewRef} isMatch={search}>
+              <span>{`${interviewRef} ${firstName} ${lastName}`}</span>
+            </Profile>
+          );
+        })
+      );
   }
 
   renderProfiles() {
     const { type } = this.state;
-    const { dataByType } = this.props;
-    const data = dataByType[type];
+    const { searchText, searchData, dataByType } = this.props;
+    const data = (searchData[type] || []).concat(dataByType[type]);
+
     const data1 = data.filter((d, index) => (index < data.length/2) );
     const data2 = data.filter((d, index) => (index >= data.length/2) );
 

@@ -5,6 +5,8 @@ import Board from '../Board';
 import { withAnnouncementData } from '../hoc';
 import { imgSource, backgroundColor } from '../const';
 
+// import { Input } from 'antd';
+
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
@@ -35,6 +37,7 @@ const Input = styled.input`
   height: 1.5rem;
   border-radius: 0.15rem;
   margin-bottom: 2rem;
+  color: black;
 `;
 const Button = styled.div`
   color: black;
@@ -44,6 +47,15 @@ const Button = styled.div`
 `;  
 
 class Announcement extends Component {
+  handleSearch = (e) => {
+    const { onSearch } = this.props;
+    const value = e.target.value;
+
+    if (onSearch) {
+      onSearch(value);
+    }
+  }
+
   render() { 
     const { loading, error } = this.props;
 
@@ -55,10 +67,15 @@ class Announcement extends Component {
     return (
       <Container>
         <MenuContainer>
+        {/* <Input.Search
+          placeholder="input search text"
+          style={{ width: 200 }}
+          onSearch={value => console.log(value)}
+        /> */}
           <Logo>
             <img src={imgSource('logo')} />
           </Logo>
-          <Input />
+          <Input onChange={this.handleSearch}/>
           <Button>Search</Button>
         </MenuContainer>
         <Board {...this.props} />

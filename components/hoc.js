@@ -89,23 +89,40 @@ function WithSearchProfile(Component) {
   return createReactClass({
     getInitialState() {
       return {
-        searchText: null,
-        searchData: []
+        searchText: '',
+        searchData: null
       };
     },
 
     componentWillUpdate(nextProps, nextState) {
       if (nextState.searchText !== this.state.searchText) {
-        const searchData = this.searchProfile(nextProps.data, nextState.searchText);
+        const searchData = this.searchProfile(nextProps.dataByType, nextState.searchText);
+        nextState.searchData = searchData;
       }
 
-      if(!nextProps.loading && !nextProps.error) {
+      if(!nextProps.loading && !nextProps.error && !this.state.searchData) {
         nextState.searchData = nextProps.data;
       }
     },
 
     searchProfile(data, value) {
-      return data;
+      const searchData = {}; 
+
+      TYPES.forEach((type) => {
+        searchData[type] = [];
+        data[type].forEach((d) => {
+          const profile = Object.assign({}, d);
+          const { firstName, lastName } = profile;
+          if(value.length > 0 && (firstName.search(value) >-1 || lastName.search(value) >-1)) {
+            profile.search = true;
+            searchData[type].push(profile);
+          }
+        });
+
+        sortBy(searchData[type], ['interviewRef']);
+      })
+      console.log(searchData['programming'])
+      return searchData;
     },
 
     handleSearch(value){
@@ -115,9 +132,9 @@ function WithSearchProfile(Component) {
     },
 
     render() {
-      const { searchData } = this.state;
+      const { searchData, searchText } = this.state;
       
-      return <Component searchData={searchData} onSearch={this.handleSearch} {...this.props} />
+      return <Component searchData={searchData} searchText={searchText} onSearch={this.handleSearch} {...this.props} />
     }
   });
 }
