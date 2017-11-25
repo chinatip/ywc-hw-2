@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import filter from 'lodash/filter';
 
-import { TYPES, TITLE_TYPES, imgSource } from './const';
+import { TABS, TYPES, TITLE_TYPES, COLOR_TYPES, COLOR_FADE_TYPES, imgSource } from './const';
 
 const BoardContainer = styled.div`
   display: flex;
@@ -17,23 +17,22 @@ const BoardContainer = styled.div`
 `;
 const BoardInnerContainer = styled.div`
   display: flex;
-  margin-bottom: 1rem;
 `;
 
 const BoardTypeWrapper = styled.div`
   display: flex;
   overflow: hidden;
-  align-items: center;
   flex: 1;
 `;
 const TypeWrapper = styled.div`
-  text-align: center;
-  margin-right: 0.4rem;
-  padding: 0.1rem;
-  border: 1px solid grey;
-  border-radius: 0.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
   cursor: pointer;
-  ${props => props.select? 'border: 2px solid purple;': ''};
+  background: white;
+  ${props => props.select? `background: ${COLOR_FADE_TYPES[props.type]}`: ''};
 
   img {
     width: 100%;
@@ -45,30 +44,32 @@ const TypeWrapper = styled.div`
   }
 `;
 
-const BoardHomeWorkWrapper = styled.div`
+const Space = styled.div`
   flex: 1;
-  border: 1px solid grey;
-  border-radius: 0.3rem;
-  height: 14rem;
 `;
 
 const BoardProfilesWrapper = styled.div`
   flex: 1;
-  display: flex;
   overflow-y: auto;
+  padding: 1rem;
+  background: ${props => COLOR_FADE_TYPES[props.type]};
 `;
+const ColumnWrapper = styled.div`
+  display: flex;
+`
 const Column = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
 `;
 const Profile = styled.div`
-  border: 1px solid;
+  border: 1px solid transparent;
   border-radius: 0.2rem;
   padding: 0.2rem;
   margin-right: 0.5rem;
   margin-bottom: 0.5rem;
-  ${props => props.isMatch? 'background: red': ''};
+  background: white;
+  ${props => props.isMatch? `border-color: ${COLOR_TYPES[props.type]}; box-shadow: 0 0 0.5rem 0.1rem ${COLOR_TYPES[props.type]};`: ''};
 `;
 
 class Board extends Component {
@@ -91,7 +92,7 @@ class Board extends Component {
       <BoardTypeWrapper>
         { TYPES.map((t) => {
             return (
-              <TypeWrapper select={type === t} onClick={this.handleSelectType(t)}>
+              <TypeWrapper select={type === t} type={type} onClick={this.handleSelectType(t)}>
                 <img src={imgSource(t)} />
                 <div>{`Web ${TITLE_TYPES[t]}`}</div>
               </TypeWrapper>
@@ -112,7 +113,7 @@ class Board extends Component {
           const isMatch = filter(searchData[type], ((s) => interviewRef === s.interviewRef)).length > 0;
 
           return (
-            <Profile key={index + interviewRef} isMatch={search}>
+            <Profile key={index + interviewRef} isMatch={search} type={type}>
               <span>{`${interviewRef} ${firstName} ${lastName}`}</span>
             </Profile>
           );
@@ -129,13 +130,15 @@ class Board extends Component {
     const data2 = data.filter((d, index) => (index >= data.length/2) );
 
     return (
-      <BoardProfilesWrapper>
-        <Column>
-          {this.renderColumnProfiles(data1)}
-        </Column>
-        <Column>
-          {this.renderColumnProfiles(data2)}
-        </Column>
+      <BoardProfilesWrapper type={type}>
+        <ColumnWrapper>
+          <Column>
+            {this.renderColumnProfiles(data1)}
+          </Column>
+          <Column>
+            {this.renderColumnProfiles(data2)}
+          </Column>
+        </ColumnWrapper>
       </BoardProfilesWrapper>
     );
   }
@@ -145,9 +148,7 @@ class Board extends Component {
       <BoardContainer>
         <BoardInnerContainer>
           {this.renderMenuType()}
-          <BoardHomeWorkWrapper>
-
-          </BoardHomeWorkWrapper>
+          <Space />
         </BoardInnerContainer>
         {this.renderProfiles()}
       </BoardContainer>

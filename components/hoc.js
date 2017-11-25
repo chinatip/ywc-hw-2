@@ -69,9 +69,12 @@ function WithDataByType(Component) {
       const dataByType = {};
 
       TYPES.forEach((t) => {
-        const fData = sortBy(data.filter((d) => (d.major === t)), ['interviewRef']);
-        
-        dataByType[t] = fData;
+        if (t === 'all') {
+          dataByType[t] = data;
+        } else {
+          const fData = sortBy(data.filter((d) => (d.major === t)), ['interviewRef']);
+          dataByType[t] = fData;
+        }
       });
 
       return dataByType;
