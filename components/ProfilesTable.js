@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import map from 'lodash/map';
 import sortBy from 'lodash/sortBy';
-import { Table, Popover, Modal, Dropdown, Menu, Button } from 'antd';
+import { Table, Popover, Modal, Dropdown, Menu, Button, Icon } from 'antd';
 
 import { TYPES, dataFormat, FBimgSource, FBProfile } from './const';
 import { FB_ID_BY_MAJOR } from './const-fb-id'
@@ -35,7 +35,15 @@ const Title = styled.span`
 `; 
 
 const DropdownContainer = styled.div`
+  display: flex;
   margin-bottom: 1rem;
+
+  .ant-btn {
+    padding: 0 0.3rem;
+  }
+  .ant-dropdown-trigger {
+    width: 5rem;    
+  }
 `;  
 const RollbackDropdown = styled.div`
   .ant-dropdown-menu-item {
@@ -53,12 +61,19 @@ class ProfilesTable extends Component {
     this.state = {
       visible: false,
       profile: null,
-      sortKey: Object.keys(dataFormat)[0]
+      sortKey: Object.keys(dataFormat)[0],
+      reverse: false
     }
   }
 
   handleSort = (sortKey) => () => {
     this.setState({ sortKey });
+  }
+
+  handleReverse = () => {
+    const { reverse } = this.state;
+
+    this.setState({ reverse: !reverse });
   }
 
   handleOpen = (profile) => {
@@ -129,7 +144,7 @@ class ProfilesTable extends Component {
   }
 
   render() {
-    const { sortKey } = this.state;
+    const { sortKey, reverse } = this.state;
     const { data, color } = this.props;
 
     const columns = [,{
@@ -159,21 +174,26 @@ class ProfilesTable extends Component {
       </Menu>
     );
 
+    const iconType = reverse? "up": "down";
+    const sortData = reverse? sortBy(data, [sortKey]).reverse(): sortBy(data, [sortKey]);
     return (
       <TableContainer color={color}>
         <RollbackDropdown innerRef={(r) => { this.dropdownContainer = r }} />
         <DropdownContainer>
           <Dropdown overlay={menu} placement="bottomCenter" getPopupContainer={this.handleDropDownContainer} >
-            <Button>Sort By</Button>
+            <Button>{dataFormat[sortKey]}</Button>
           </Dropdown>
+          <Button onClick={this.handleReverse}>
+            <Icon type={iconType} />
+          </Button>
         </DropdownContainer>
         <TableWrapper>
           <Table 
             size='middle' 
             pagination={{ pageSize: 80 }} 
-            scroll={{ y: 640 }}
+            scroll={{ y: 600 }}
             columns={columns} 
-            dataSource={sortBy(data, [sortKey])} 
+            dataSource={sortData} 
             onRowClick={this.handleOpen}/>
         </TableWrapper>
         { this.renderModal() }
