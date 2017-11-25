@@ -1,13 +1,14 @@
+export const dataURL = 'https://ywc15.ywc.in.th/api/interview';
+
 const content = 'content';
 const design = 'design';
 const marketing = 'marketing';
 const programming = 'programming';
 const all = 'all';
 
-export const TYPES = [content, design, marketing, programming];
-export const TABS = [all,content, design, marketing, programming];
-
-export const TITLE_TYPES = {
+export const TABS = [all, content, design, marketing, programming];
+export const MAJORS = [content, design, marketing, programming];
+export const TITLE_MAJORS = {
   content: 'Web Content',
   design: 'Web Design',
   marketing: 'Web Marketing',
@@ -15,20 +16,19 @@ export const TITLE_TYPES = {
   all: 'All Majors'
 };
 
-export const COLOR_TYPES = {
+export const COLOR_MAJORS = {
   content: '#1ab2fc',
   design: '#fef228',
   marketing: '#f32936',
   programming: '#07cfac',
   all: '#ff9800'
 };
-
-export const COLOR_FADE_TYPES = {
+export const COLOR_FADE_MAJORS = {
   content: 'rgba(26, 178, 252, 0.1)',
-  design: 'rgba(254, 242, 40, 0.1)',
+  design: 'rgba(254, 242, 40, 0.22)',
   marketing: 'rgba(243, 41, 54, 0.1)',
   programming: 'rgba(7, 207, 171, 0.1)',
-  all: 'rgba(255, 152, 0, 0.3)'
+  all: 'rgba(255, 152, 0, 0.2)'
 };
 
 export const dataFormat = {

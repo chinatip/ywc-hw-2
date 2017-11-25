@@ -3,9 +3,9 @@ import createReactClass from 'create-react-class';
 import { compose } from 'recompose';
 import sortBy from 'lodash/sortBy';
 import forEach from 'lodash/forEach';
-import $ from 'jquery';
+import filter from 'lodash/filter';
 
-import { TYPES } from './const';
+import { MAJORS, dataURL } from './const';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
@@ -25,9 +25,7 @@ function WithLoadData(Component) {
     },
 
     async loadData() {
-      const url = 'https://ywc15.ywc.in.th/api/interview';
-
-      await fetch(url)
+      await fetch(dataURL)
         .then((res) => res.json())
         .then((data) => {
           this.setState({
@@ -47,7 +45,7 @@ function WithLoadData(Component) {
     render() {
       const { data, loading, error } = this.state;
       
-      return <Component data={data} loading={loading} error={error} {...this.props} />
+      return <Component data={data} loading={loading} error={error} {...this.props} />;
     }
   });
 }
@@ -56,33 +54,33 @@ function WithDataByType(Component) {
   return createReactClass({
     getInitialState() {
       return {
-        dataByType: [],
+        dataByMajor: [],
       };
     },
 
     componentWillUpdate(nextProps, nextState) {
       if(!nextProps.loading && !nextProps.error) {
-        nextState.dataByType = this.initData(nextProps);
+        nextState.dataByMajor = this.initData(nextProps);
       }
     },
 
     initData({ data }) {
-      const dataByType = {};
+      const dataByMajor = {};
 
-      TYPES.forEach((t) => {
-        const fData = sortBy(data.filter((d) => (d.major === t)), ['interviewRef']);
-        dataByType[t] = fData;
+      MAJORS.forEach((t) => {
+        const fData = sortBy(filter(data, (d) => (d.major === t)), ['interviewRef']);
+        dataByMajor[t] = fData;
       });
 
-      dataByType['all'] = data;
+      dataByMajor['all'] = data;
 
-      return dataByType;
+      return dataByMajor;
     },
 
     render() {
-      const { dataByType } = this.state;
+      const { dataByMajor } = this.state;
       
-      return <Component dataByType={dataByType} {...this.props} />
+      return <Component dataByMajor={dataByMajor} {...this.props} />;
     }
   });
 }
@@ -92,13 +90,13 @@ function WithSearchData(Component) {
     getInitialState() {
       return {
         searchText: '',
-        searchData: this.props.dataByType
+        searchData: this.props.dataByMajor
       };
     },
 
     componentWillUpdate(nextProps, nextState) {
-      if (nextState.searchText !== this.state.searchText || nextProps.dataByType !== this.props.dataByType) {
-        const searchData = this.searchData(nextProps.dataByType, nextState.searchText);
+      if (nextState.searchText !== this.state.searchText || nextProps.dataByMajor !== this.props.dataByMajor) {
+        const searchData = this.searchData(nextProps.dataByMajor, nextState.searchText);
         nextState.searchData = searchData;
       }
     },
@@ -107,21 +105,21 @@ function WithSearchData(Component) {
       const searchData = {}; 
       searchData['all'] = [];
       
-      TYPES.forEach((type) => {
-        searchData[type] = [];
-        forEach(data[type], (d) => {
+      MAJORS.forEach((major) => {
+        searchData[major] = [];
+        forEach(data[major], (d) => {
           const profile = Object.assign({}, d);
           const { firstName, lastName } = profile;
           if(firstName.search(value) >-1 || lastName.search(value) >-1) {
             profile.search = true;
-            searchData[type].push(profile);
+            searchData[major].push(profile);
             searchData['all'].push(profile);
           }
         });
 
 
-        sortBy(searchData[type], ['interviewRef']);
-      })
+        sortBy(searchData[major], ['interviewRef']);
+      });
 
       return searchData;
     },
@@ -133,9 +131,9 @@ function WithSearchData(Component) {
     },
 
     render() {
-      const { searchData, searchText } = this.state;
+      const { searchData } = this.state;
       
-      return <Component searchData={searchData} searchText={searchText} onSearch={this.handleSearch} {...this.props} />
+      return <Component searchData={searchData} onSearch={this.handleSearch} {...this.props} />
     }
   });
 }

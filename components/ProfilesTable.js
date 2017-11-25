@@ -4,14 +4,12 @@ import map from 'lodash/map';
 import sortBy from 'lodash/sortBy';
 import { Table, Popover, Modal, Dropdown, Menu, Button, Icon } from 'antd';
 
-import { TYPES, dataFormat, FBimgSource, FBProfile } from './const';
+import { MAJORS, dataFormat, FBimgSource, FBProfile } from './const';
 import { FB_ID_BY_MAJOR } from './const-fb-id'
 
 const TableContainer = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 0 1rem;
-  background: ${props => props.color};
 `;
 const TableWrapper = styled.div`
   background: white;
@@ -145,7 +143,7 @@ class ProfilesTable extends Component {
 
   render() {
     const { sortKey, reverse } = this.state;
-    const { data, color } = this.props;
+    const { data } = this.props;
 
     const columns = [,{
       title: 'ID',
@@ -177,7 +175,7 @@ class ProfilesTable extends Component {
     const iconType = reverse? "up": "down";
     const sortData = reverse? sortBy(data, [sortKey]).reverse(): sortBy(data, [sortKey]);
     return (
-      <TableContainer color={color}>
+      <TableContainer>
         <RollbackDropdown innerRef={(r) => { this.dropdownContainer = r }} />
         <DropdownContainer>
           <Dropdown overlay={menu} placement="bottomCenter" getPopupContainer={this.handleDropDownContainer} >

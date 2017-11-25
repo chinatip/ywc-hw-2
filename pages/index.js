@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import styled, { injectGlobal, css } from 'styled-components'
 
-import { Welcome, Announcement } from '../components';
+import { Welcome, Announcement } from '../components/section';
 import { media, mediaExceed } from '../utils/media-style';
-// import Welcome from '../components/section/Welcome';
-// import Announcement from '../components/section/Announcement';
 
 class Index extends Component {
   render() { 

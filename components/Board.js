@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import filter from 'lodash/filter';
 
 import ProfilesTable from './ProfilesTable';
-import { TABS, TYPES, TITLE_TYPES, COLOR_FADE_TYPES, imgSource } from './const';
+import { TABS, MAJORS, TITLE_MAJORS, COLOR_FADE_MAJORS, imgSource } from './const';
 
 const BoardContainer = styled.div`
   display: flex;
@@ -20,12 +20,12 @@ const BoardInnerContainer = styled.div`
   display: flex;
 `;
 
-const BoardTypeWrapper = styled.div`
+const BoardMajorWrapper = styled.div`
   display: flex;
   overflow: hidden;
   flex: 1;
 `;
-const TypeWrapper = styled.div`
+const MajorWrapper = styled.div`
   display: flex;
   max-width: 7rem;
   max-height: 7rem;
@@ -37,68 +37,67 @@ const TypeWrapper = styled.div`
   padding: 0.2rem;
   cursor: pointer;
   background: white;
-  ${props => props.select? `background: ${COLOR_FADE_TYPES[props.type]}`: ''};
-
-  img {
-    width: 7rem;
-    height: 5.5rem;
-  }
+  ${props => props.select? `background: ${COLOR_FADE_MAJORS[props.major]}`: ''};
 
   div {
     text-align: center;
   }
 `;
+const MajorImage = styled.div`
+  width: 7rem;
+  height: 5.5rem;
+  img {
+    width: 100%;
+    height: auto;
+  }
+`
 
 const Space = styled.div`
   flex: 1;
 `;
-const cssTableSpaceTop = css`
-  border-top-right-radius: 0.5rem;
-  border-top-left-radius: ${ props => props.type !== 'all'? '0.5rem': 0};
-`;
-const cssTableSpaceBottom = css`
-  border-bottom-left-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
+
+const TableContainer = styled.div`
+  border-radius: 0.5rem;
+  border-top-left-radius: ${ props => props.major !== 'all'? '0.5rem': 0};
+  background: linear-gradient(to bottom, ${props => COLOR_FADE_MAJORS[props.major]} 30%, white 100%);
+  padding: 1rem;
 `
-const TableSpace = styled.div`
-  background: ${props => COLOR_FADE_TYPES[props.type]};
-  height: 1rem;
-  ${props => props.top? cssTableSpaceTop: cssTableSpaceBottom};
-`;
 
 class Board extends Component {
   constructor(props) {
     super();
 
     this.state = {
-      type: TABS[0],
+      major: TABS[0],
     };
   }
   
-  handleSelectType = (type) => () => {
-    this.setState({ type });
+  handleSelectType = (major) => () => {
+    this.setState({ major });
   }
 
   renderMenuType() {
-    const { type } = this.state;
+    const { major } = this.state;
 
     return (
-      <BoardTypeWrapper>
+      <BoardMajorWrapper>
         { TABS.map((t) => {
             return (
-              <TypeWrapper select={type === t} type={type} onClick={this.handleSelectType(t)}>
-                <img src={imgSource(t)} />
-                <div>{TITLE_TYPES[t]}</div>
-              </TypeWrapper>
+              <MajorWrapper select={major === t} major={major} onClick={this.handleSelectType(t)}>
+                <MajorImage>
+                  <img src={imgSource(t)} />
+                </MajorImage>
+                <div>{TITLE_MAJORS[t]}</div>
+              </MajorWrapper>
             );
           })
         }
-      </BoardTypeWrapper>
+      </BoardMajorWrapper>
     );
   }
   
   render() { 
-    const { type } = this.state;
+    const { major } = this.state;
     const { searchData } = this.props;
     return (
       <BoardContainer>
@@ -106,9 +105,9 @@ class Board extends Component {
           {this.renderMenuType()}
           <Space />
         </BoardInnerContainer>
-        <TableSpace type={type} top />
-        <ProfilesTable data={searchData[type]} color={COLOR_FADE_TYPES[type]} />
-        <TableSpace type={type}/>
+        <TableContainer major={major}>
+          <ProfilesTable data={searchData[major]} />
+        </TableContainer>
       </BoardContainer>
     );
   }

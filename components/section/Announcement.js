@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { Input, Icon } from 'antd';
 
 import Board from '../Board';
 import { withAnnouncementData } from '../hoc';
 import { imgSource, backgroundColor } from '../const';
-
-// import { Input } from 'antd';
 
 const Container = styled.div`
   width: 100vw;
@@ -32,32 +31,43 @@ const Logo = styled.div`
     height: auto;
   }
 `;
-const Input = styled.input`
-  width: 15rem;
-  height: 1.5rem;
-  border-radius: 0.15rem;
-  margin-bottom: 2rem;
-  color: black;
-`;
-const Button = styled.div`
-  color: black;
-  background: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.2rem;
-`;  
 
 class Announcement extends Component {
-  handleSearch = (e) => {
-    const { onSearch } = this.props;
-    const value = e.target.value;
+  constructor(props) {
+    super();
 
-    if (onSearch) {
-      onSearch(value);
+    this.state = {
+      searchText: ''
+    };
+  }
+
+  componentWillUpdate (nextProps, nextState) {
+    if(nextState.searchText !== this.state.searchText) {
+      this.updateSearchText(nextProps, nextState);
     }
   }
 
+  updateSearchText({ onSearch }, { searchText }) {
+    if (onSearch) {
+      onSearch(searchText);
+    }
+  }
+
+  handleSearch = (e) => {
+    this.setState({ searchText: e.target.value });
+  }
+
+  emitEmpty = () => {
+    this.searchInput.focus();
+    
+    this.setState({ searchText: '' });
+  }
+
   render() { 
+    const { searchText } = this.state;
     const { loading, error } = this.props;
+
+    const suffix = searchText.length > 0? <Icon type="close-circle" onClick={this.emitEmpty} style={{ cursor: 'pointer' }}/> : null;
 
     if (loading) {
       return 'loading...';
@@ -67,16 +77,17 @@ class Announcement extends Component {
     return (
       <Container>
         <MenuContainer>
-        {/* <Input.Search
-          placeholder="input search text"
-          style={{ width: 200 }}
-          onSearch={value => console.log(value)}
-        /> */}
           <Logo>
             <img src={imgSource('logo')} />
           </Logo>
-          <Input onChange={this.handleSearch}/>
-          <Button>Search</Button>
+          <Input
+            placeholder="Search"
+            suffix={suffix}
+            value={searchText}
+            style={{ width: 200 }}
+            onChange={this.handleSearch}
+            ref={(r) => { this.searchInput = r }}
+          />
         </MenuContainer>
         <Board {...this.props} />
       </Container>
