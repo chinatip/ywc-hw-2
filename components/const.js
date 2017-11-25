@@ -4,8 +4,8 @@ const marketing = 'marketing';
 const programming = 'programming';
 const all = 'all';
 
-export const TYPES = ['content', 'design', 'marketing', 'programming'];
-export const TABS = ['all','content', 'design', 'marketing', 'programming'];
+export const TYPES = [content, design, marketing, programming];
+export const TABS = [all,content, design, marketing, programming];
 
 export const TITLE_TYPES = {
   content: 'Web Content',
@@ -37,4 +37,13 @@ export const backgroundColor = '#202832';
 export const imgSource = (value) => {
   if (value === all) return null;
   return `/static/${value}.png`;
+};
+
+export const FBimgSource = (fbId) => {
+  return `http://graph.facebook.com/${fbId}/picture?type=square`;
+};
+
+export const FBProfile = (fbId) => {
+  if(!fbId) return ;
+  return `http://www.facebook.com/${fbId}`;
 };

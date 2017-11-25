@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import filter from 'lodash/filter';
-import { Table, Popover } from 'antd';
 
-import { TABS, TYPES, TITLE_TYPES, COLOR_TYPES, COLOR_FADE_TYPES, imgSource } from './const';
+import ProfilesTable from './ProfilesTable';
+import { TABS, TYPES, TITLE_TYPES, COLOR_FADE_TYPES, imgSource } from './const';
 
 const BoardContainer = styled.div`
   display: flex;
@@ -54,30 +54,6 @@ const TableSpace = styled.div`
   height: 1rem;
 `;
 
-const TableContainer = styled.div`
-  flex: 1;
-  overflow-y: auto;
-  padding: 1rem;
-  padding-top: 0;
-  background: ${props => COLOR_FADE_TYPES[props.type]};
-`;
-const TableWrapper = styled.div`
-  background: white;
-`;
-
-const PopoverContainer = styled.div`
-  display: flex;
-`;
-const Image = styled.div`
-  width: 2rem;
-  height: 2rem;
-  background: grey;
-  margin-right: 0.5rem;
-`; 
-const Title = styled.span`
-
-`; 
-
 class Board extends Component {
   constructor(props) {
     super();
@@ -108,70 +84,18 @@ class Board extends Component {
       </BoardTypeWrapper>
     );
   }
-
-  renderProfilePopover(id, record) {
-    const { firstName, lastName, interviewRef } = record;
-    const content = (
-      <PopoverContainer>
-        <Image></Image>
-        <Title>{`${firstName} ${lastName}`}</Title>
-      </PopoverContainer>
-    );
-
-    return (
-      <Popover content={content} placement="bottom" placement="topRight" trigger="hover">
-        <div style={{ cursor: 'pointer' }}>{id}</div>
-      </Popover>
-    );
-  }
-
-  renderProfilesTable() {
-    const { type } = this.state;
-    const { searchText, searchData, dataByType } = this.props;
-
-    const columns = [,{
-      title: 'ID',
-      dataIndex: 'interviewRef',
-      sorter: (a, b) => a.length - b.length,
-      render: (id, record) => {
-        return this.renderProfilePopover(id, record);
-      },
-    },{
-      title: 'Firstname',
-      dataIndex: 'firstName',
-      sorter: (a, b) => a.length - b.length,
-    }, {
-      title: 'Lastname',
-      dataIndex: 'lastName',
-      sorter: (a, b) => a.length - b.length,
-    },{
-      title: 'Major',
-      dataIndex: 'major',
-    }];
-    
-    return (
-      <TableContainer type={type}>
-        <TableWrapper>
-          <Table 
-          size='middle' 
-          pagination={{ pageSize: 80 }} 
-          columns={columns} 
-          dataSource={searchData[type]} 
-          onRowMouseEnter={this.handleRowMouseEnter}/>
-        </TableWrapper>
-      </TableContainer>
-    );
-  }
   
   render() { 
+    const { type } = this.state;
+    const { searchData } = this.props;
     return (
       <BoardContainer>
         <BoardInnerContainer>
           {this.renderMenuType()}
           <Space />
         </BoardInnerContainer>
-        <TableSpace type={this.state.type}/>
-        {this.renderProfilesTable()}
+        <TableSpace type={type}/>
+        <ProfilesTable data={searchData[type]} color={COLOR_FADE_TYPES[type]} />
       </BoardContainer>
     );
   }
