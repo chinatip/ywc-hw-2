@@ -12,7 +12,7 @@ export const TITLE_TYPES = {
   design: 'Web Design',
   marketing: 'Web Marketing',
   programming: 'Web Programming',
-  all: 'All'
+  all: 'All Majors'
 };
 
 export const COLOR_TYPES = {
@@ -31,6 +31,7 @@ export const COLOR_FADE_TYPES = {
   all: 'rgba(255, 152, 0, 0.3)'
 };
 
+export const font = `'Prompt', sans-serif`;
 export const textColor = '#66fcf1';
 export const backgroundColor = '#202832';
 

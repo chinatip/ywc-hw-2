@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import filter from 'lodash/filter';
 
 import ProfilesTable from './ProfilesTable';
@@ -27,6 +27,10 @@ const BoardTypeWrapper = styled.div`
 `;
 const TypeWrapper = styled.div`
   display: flex;
+  max-width: 7rem;
+  max-height: 7rem;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -36,8 +40,8 @@ const TypeWrapper = styled.div`
   ${props => props.select? `background: ${COLOR_FADE_TYPES[props.type]}`: ''};
 
   img {
-    width: 100%;
-    height: auto;
+    width: 7rem;
+    height: 5.5rem;
   }
 
   div {
@@ -48,10 +52,18 @@ const TypeWrapper = styled.div`
 const Space = styled.div`
   flex: 1;
 `;
-
+const cssTableSpaceTop = css`
+  border-top-right-radius: 0.5rem;
+  border-top-left-radius: ${ props => props.type !== 'all'? '0.5rem': 0};
+`;
+const cssTableSpaceBottom = css`
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+`
 const TableSpace = styled.div`
   background: ${props => COLOR_FADE_TYPES[props.type]};
   height: 1rem;
+  ${props => props.top? cssTableSpaceTop: cssTableSpaceBottom};
 `;
 
 class Board extends Component {
@@ -94,8 +106,9 @@ class Board extends Component {
           {this.renderMenuType()}
           <Space />
         </BoardInnerContainer>
-        <TableSpace type={type}/>
+        <TableSpace type={type} top />
         <ProfilesTable data={searchData[type]} color={COLOR_FADE_TYPES[type]} />
+        <TableSpace type={type}/>
       </BoardContainer>
     );
   }

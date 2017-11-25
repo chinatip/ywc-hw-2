@@ -8,8 +8,7 @@ import { FB_ID_BY_MAJOR } from './const-fb-id'
 const TableContainer = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 1rem;
-  padding-top: 0;
+  padding: 0 1rem;
   background: ${props => props.color};
 `;
 const TableWrapper = styled.div`

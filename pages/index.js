@@ -11,7 +11,7 @@ class Index extends Component {
     return (
       <Container>
         <GlobalStyles />
-        {/* <Welcome /> */}
+        <Welcome />
         <Announcement />
       </Container>
     );

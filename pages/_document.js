@@ -22,6 +22,7 @@ export default class MyDocument extends Document {
          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
          <title>YWC</title>
          <link rel="stylesheet" href="/static/antd.min.css" />
+         <link href="https://fonts.googleapis.com/css?family=Prompt" rel="stylesheet" />
          {styleTags}
        </Head>
        <body>
