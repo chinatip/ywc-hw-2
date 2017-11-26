@@ -25,13 +25,10 @@ const GlobalStyles = ({ theme }) => {
       padding: 0;
       width: 100%;
       height: 100%;
+      background: #202832;
     }
 
-    ${mediaExceed.super`html { font-size: 1vw; }`}
-    ${media.super`html { font-size: 17px; }`}
-    ${media.giant`html { font-size: 15px; }`}
-    ${media.big`html { font-size: 13px; }`}
-    ${media.small`html { font-size: 13px; }`}
+    ${media.medium`html { font-size: 13px; }`}
     ${media.tablet`html { font-size: 13px; }`}
     ${media.mobile`html { font-size: 12px; }`}
     ${media.smallMobile`html { font-size: 11px; }`}

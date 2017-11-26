@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import { imgSource, backgroundColor, font } from '../const';
+import { imgSource, font } from '../const';
 
 const Container = styled.div`
-  width: 100vw;
   height: 100vh;
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: ${backgroundColor};
   font-family: ${font};
 `;
 const LogoContainer = styled.div`

@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import filter from 'lodash/filter';
 
-import ProfilesTable from './ProfilesTable';
-import { TABS, MAJORS, TITLE_MAJORS, COLOR_FADE_MAJORS, imgSource } from './const';
+import AnnouncementTable from './AnnouncementTable';
+import { TABS, TITLE_MAJORS, COLOR_FADE_MAJORS, imgSource, media } from './const';
 
-const BoardContainer = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   background: white;
@@ -15,9 +15,14 @@ const BoardContainer = styled.div`
   border-top-right-radius: 1rem;
   flex-basis: 75%;
   color: grey;
+  ${ media.tablet`
+    margin: 0 1rem;
+  `}
 `;
 const BoardInnerContainer = styled.div`
   display: flex;
+  min-height: 6.5rem;
+    
 `;
 
 const BoardMajorWrapper = styled.div`
@@ -37,11 +42,20 @@ const MajorWrapper = styled.div`
   padding: 0.2rem;
   cursor: pointer;
   background: white;
+  font-size: 0.75rem;
   ${props => props.select? `background: ${COLOR_FADE_MAJORS[props.major]}`: ''};
 
   div {
     text-align: center;
   }
+
+  ${ media.tablet`
+    max-width: 6rem;
+  `}
+
+  ${ media.mobile`
+    font-size: 0.8rem;
+  `}
 `;
 const MajorImage = styled.div`
   width: 7rem;
@@ -50,10 +64,12 @@ const MajorImage = styled.div`
     width: 100%;
     height: auto;
   }
-`
-
-const Space = styled.div`
-  flex: 1;
+  ${ media.tablet`
+    max-width: 6rem;
+  `}
+  ${ media.mobile`
+    max-width: 5rem;
+  `}
 `;
 
 const TableContainer = styled.div`
@@ -61,9 +77,9 @@ const TableContainer = styled.div`
   border-top-left-radius: ${ props => props.major !== 'all'? '0.5rem': 0};
   background: linear-gradient(to bottom, ${props => COLOR_FADE_MAJORS[props.major]} 30%, white 100%);
   padding: 1rem;
-`
+`;
 
-class Board extends Component {
+class AnnouncementBoard extends Component {
   constructor(props) {
     super();
 
@@ -99,18 +115,18 @@ class Board extends Component {
   render() { 
     const { major } = this.state;
     const { searchData } = this.props;
+
     return (
-      <BoardContainer>
+      <Container>
         <BoardInnerContainer>
           {this.renderMenuType()}
-          <Space />
         </BoardInnerContainer>
         <TableContainer major={major}>
-          <ProfilesTable data={searchData[major]} />
+          <AnnouncementTable data={searchData[major]} />
         </TableContainer>
-      </BoardContainer>
+      </Container>
     );
   }
 } 
 
-export default Board;
+export default AnnouncementBoard;

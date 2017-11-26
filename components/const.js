@@ -1,3 +1,6 @@
+import { media, mediaExceed } from '../utils/media-style';
+export { media, mediaExceed };
+
 export const dataURL = 'https://ywc15.ywc.in.th/api/interview';
 
 const content = 'content';
@@ -40,7 +43,6 @@ export const dataFormat = {
 
 export const font = `'Prompt', sans-serif`;
 export const textColor = '#66fcf1';
-export const backgroundColor = '#202832';
 
 export const imgSource = (value) => {
   if (value === all) return null;

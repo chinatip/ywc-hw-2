@@ -59,7 +59,7 @@ function WithDataByType(Component) {
     },
 
     componentWillUpdate(nextProps, nextState) {
-      if(!nextProps.loading && !nextProps.error) {
+      if (!nextProps.loading && !nextProps.error) {
         nextState.dataByMajor = this.initData(nextProps);
       }
     },
@@ -110,7 +110,7 @@ function WithSearchData(Component) {
         forEach(data[major], (d) => {
           const profile = Object.assign({}, d);
           const { firstName, lastName } = profile;
-          if(firstName.search(value) >-1 || lastName.search(value) >-1) {
+          if (firstName.search(value) >-1 || lastName.search(value) >-1) {
             profile.search = true;
             searchData[major].push(profile);
             searchData['all'].push(profile);
