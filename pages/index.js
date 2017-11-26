@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled, { injectGlobal, css } from 'styled-components'
 
+import { imgSource } from '../components/const';
 import { Welcome, Announcement } from '../components/section';
 import { media, mediaExceed } from '../utils/media-style';
 
@@ -11,7 +12,9 @@ const GlobalStyles = ({ theme }) => {
       padding: 0;
       width: 100%;
       height: 100%;
-      background: #202832;
+      background-image: url(${imgSource('bg-cell')});
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
 
     ${media.medium`html { font-size: 13px; }`}
@@ -29,12 +32,15 @@ const Container = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-image: url(${props => props.url});
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 `;
 
 class Index extends Component {
   render() { 
     return (
-      <Container>
+      <Container url={imgSource('bg')}>
         <GlobalStyles />
         <Welcome />
         <Announcement />

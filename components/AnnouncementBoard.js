@@ -22,7 +22,6 @@ const Container = styled.div`
 const BoardInnerContainer = styled.div`
   display: flex;
   min-height: 6.5rem;
-    
 `;
 
 const BoardMajorWrapper = styled.div`

@@ -17,6 +17,7 @@ const Container = styled.div`
 `;
 const InnerContainer = styled.div`
   height: auto;
+  min-height: 100%;
   display: flex;
   
   ${ media.tablet`
