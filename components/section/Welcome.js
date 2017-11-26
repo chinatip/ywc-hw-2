@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import $ from 'jquery';
 
 import { imgSource, font } from '../const';
 
@@ -11,6 +12,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   font-family: ${font};
+  position: relative;
 `;
 const LogoContainer = styled.div`
   padding: 3rem;
@@ -31,7 +33,37 @@ const Subtitle = styled.span`
   font-size: 2rem;
 `;
 
+const animation = keyframes`
+  0% {
+    transform: rotate(-45deg) translate(0, 0);
+  }
+  20% {
+    transform: rotate(-45deg) translate(-10px, 10px);
+  }
+  40% {
+    transform: rotate(-45deg) translate(0, 0);
+  }
+`;
+
+const Scroll = styled.span`
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  bottom: 7rem;
+  cursor: pointer;
+  transform: rotate(-45deg);
+  border-left: 0.2rem solid #fff;
+  border-bottom: 0.2rem solid #fff;
+  animation: ${animation} 2s infinite;
+`;
+
 class Welcome extends Component {
+  scroll = () => {
+    $('html, body').animate({
+      scrollTop: $("#announcement-section").offset().top
+    }, 500);
+  }
+
   render() { 
     return (
       <Container>
@@ -40,6 +72,7 @@ class Welcome extends Component {
         </LogoContainer>
         <Title>SEMI_FINAL ROUND</Title>
         <Subtitle>ประกาศผู้มีสิทธิ์เข้าสัมภาษณ์</Subtitle>
+        <Scroll onClick={this.scroll}></Scroll>
       </Container>
     );
   }

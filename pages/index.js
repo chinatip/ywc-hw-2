@@ -4,20 +4,6 @@ import styled, { injectGlobal, css } from 'styled-components'
 import { Welcome, Announcement } from '../components/section';
 import { media, mediaExceed } from '../utils/media-style';
 
-class Index extends Component {
-  render() { 
-    return (
-      <Container>
-        <GlobalStyles />
-        <Welcome />
-        <Announcement />
-      </Container>
-    );
-  }
-} 
-
-export default Index;
-
 const GlobalStyles = ({ theme }) => {
   injectGlobal `
     body, html {
@@ -44,3 +30,17 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+class Index extends Component {
+  render() { 
+    return (
+      <Container>
+        <GlobalStyles />
+        <Welcome />
+        <Announcement />
+      </Container>
+    );
+  }
+} 
+
+export default Index;

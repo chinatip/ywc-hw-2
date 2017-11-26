@@ -89,7 +89,7 @@ class Announcement extends Component {
       return <WidgetError onReload={onReload}/>;
     }
     return (
-      <Container>
+      <Container id="announcement-section">
         <InnerContainer>
           <MenuContainer>
             <Logo>
