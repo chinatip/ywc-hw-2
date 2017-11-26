@@ -24,6 +24,10 @@ function WithLoadData(Component) {
       this.loadData();
     },
 
+    handdleReload() {
+      this.loadData();
+    },
+
     async loadData() {
       await fetch(dataURL)
         .then((res) => res.json())
@@ -45,7 +49,7 @@ function WithLoadData(Component) {
     render() {
       const { data, loading, error } = this.state;
       
-      return <Component data={data} loading={loading} error={error} {...this.props} />;
+      return <Component data={data} loading={loading} error={error} onReload={this.handdleReload} {...this.props} />;
     }
   });
 }

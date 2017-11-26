@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Input, Icon } from 'antd';
 
 import AnnouncementBoard from '../AnnouncementBoard';
+import WidgetLoading from '../WidgetLoading';
+import WidgetError from '../WidgetError';
 import { withAnnouncementData } from '../hoc';
 import { imgSource, backgroundColor, media } from '../const';
 
@@ -77,14 +79,14 @@ class Announcement extends Component {
 
   render() { 
     const { searchText } = this.state;
-    const { loading, error } = this.props;
+    const { loading, error, onReload } = this.props;
 
     const suffix = searchText.length > 0? <Icon type="close-circle" onClick={this.emitEmpty} style={{ cursor: 'pointer' }}/> : null;
 
     if (loading) {
-      return 'loading...';
+      return <WidgetLoading />
     } else if (error) {
-      return 'error';
+      return <WidgetError onReload={onReload}/>;
     }
     return (
       <Container>
